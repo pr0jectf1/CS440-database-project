@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %}Hobbies{% endblock %}
+
+{% block content %}
+<br>
+<form class='input-group mb-3' method="post" action="/hobbies">
+    {{ form.csrf_token }}
+    {{ form.passtime }}
+    <button type="submit" class="btn btn-primary">Select Hobby</button>
+</form>
+
+{% endblock %}

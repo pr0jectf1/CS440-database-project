@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %}Querie 4{% endblock %}
+
+{% block content %}
+<h1 align="center">The users who are followed by both {{user_x}} and {{user_y}}.</h1>
+{% for client in userList %}
+    
+    <h1>{{client.username}}</h1>
+    
+{% endfor %}
+
+{% endblock %}

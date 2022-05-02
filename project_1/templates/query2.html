@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% block title %}Querie 2{% endblock %}
+
+{% block content %}
+<h1 align="center">All the blogs of user {{user_x.username}}, such that all the comments are positive for these blogs.</h1>
+
+{% for post in positive_posts %}
+    <div class="card border-dark">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <a href="/posts/{{post.user.username}}">{{post.user.username}}</a>
+            <div>
+                {% if user.username == post.author %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <ul  class="dropdown-menu">
+                        <li><a href="/delete-post/{{post.PostID}}" class="dropdown-item">Delete</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-text"><b>{{post.subject}}</b></div>
+            <br>
+            <div class="card-text">{{post.content}}</div>
+            <br>
+            
+            {% for tag in tags %}
+                {% if tag.PostID == post.PostID %}
+                <span class="badge rounded-pill bg-secondary">{{tag.tag}}</span>
+                {% endif %}
+            {% endfor %}
+            
+            <br>
+            <br>
+            <div class="collapse" id="comments-{{post.PostID}}">
+                <div class="card">
+                    <div class="card-body" id="comment-expanded-{{post.PostID}}">
+                        {% for comment in post.comments %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {{comment.sentiment}}d by <a href="/posts/{{comment.user.username}}">{{comment.user.username}}</a>: {{comment.text}} 
+                            </div>
+                            <div>
+                                <small class="text-muted">
+                                    {{comment.date_created}}
+                                </small>
+                                {% if user.username == comment.author or user.username == post.author%}
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                    <ul  class="dropdown-menu">
+                                        <li><a href="/delete-comment/{{comment.id}}" class="dropdown-item">Delete</a></li>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor%}
+                    </div>
+                </div>
+            </div>
+            <p class="card-text">
+                {% if post.comments|length > 0 %}
+                <a data-bs-toggle='collapse' href="#comments-{{post.PostID}}" role="button">
+                    <small>View {{post.comments|length}}</small>
+                </a>
+                {% else %}
+                    <small class="text-muted">No Comments</small>
+                {% endif %}
+            </p>
+            <br>
+
+            {% if user.username != post.author %}
+            <form class='input-group mb-3' method="post" action="/create-comment/{{post.PostID}}">
+                {{ form.csrf_token}}
+                {{ form.sentiment }}
+                <input type="text" id="text" name="text" class="form-control" placeholder="Comment something!">
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+            {% endif %}
+            
+        </div>
+        <div class="card-footer">
+            {{post.date_created}}
+        </div>
+    </div>
+    <br>    
+{% endfor %}
+
+<!-- {% for client in users %}
+    {% if client.comments|length == 0 %}
+        <h1>{{client.username}}</h1>
+    {% endif %}
+{% endfor %} -->
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %}Querie 5{% endblock %}
+
+{% block content %}
+<h1 align="center">User pairs that have at least one common hobby.</h1>
+{% for pair in userList %}
+    
+    <h1 align="center">({{ pair[0].username }}, {{ pair[1].username }})</h1> 
+    
+{% endfor %}
+
+{% endblock %}
